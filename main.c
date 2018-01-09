@@ -21,6 +21,7 @@ int data_append(void);
 void new_file_write(void);
 void analysis_select(void);
 void regression_mode(double [][2], int);
+void correlation_mode(double [][2], int);
 void quicksort(double [][2], int, int);
 int split(double [][2], int, int);
 
@@ -343,11 +344,32 @@ void regression_mode(double buffer[][2], int element_count)
         else return;
     }
 }
+/************************************************************
+ * correlation_mode: Calculates Pearson's correlation 	    *
+ * 		     coefficient between the 2 variables of *
+ *		     the supplied data set.		    *
+ ************************************************************/
+void correlation_mode(double buffer[][2], int element_count)
+{
+    double x_mean, y_mean, sum_xy, square_x, square_y, r;
+    int i;
 
+    for(i = x_mean = y_mean = sum_xy = square_x = 0; i < element_count; i++){
+        x_mean += buffer[i][X];
+        y_mean += buffer[i][Y];
+        square_x += pow(buffer[i][X], 2.0);
+        square_y += pow(buffer[i][Y], 2.0);
+        sum_xy += (buffer[i][X] * buffer[i][Y]);
+    }
+    x_mean /= element_count, y_mean /= element_count;
+    r = (sum_xy - (element_count * x_mean * y_mean)) / (sqrt((square_x - (element_count * pow(x_mean, 2.0))) * (square_y - (element_count * pow(y_mean, 2.0)))));
+
+    printf("\nThe correlation co-efficient is, r = %.3f\n\n", r);
+}
 /*************************************************************
  * quicksort: Recursive function that sorts buffer array     *
  *            based on the values of dependent variable.     *
- *            Depends on split() to partition the array.       *
+ *            Depends on split() to partition the array.     *
  *************************************************************/
 void quicksort(double a[][2], int low, int high)
 {
